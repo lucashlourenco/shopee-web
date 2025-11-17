@@ -1,0 +1,119 @@
+.login-container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.left-panel {
+  flex: 1;
+  padding: 40px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.left-header {
+  font-size: 24px;
+  color: #ee4d2d;
+  position: fixed;
+  top: 0;
+  left: 2;
+  width: 100%;
+  padding: 15px;
+  z-index: 1000;
+}
+
+.left-panel h1 {
+  font-size: 32px;
+  color: #ee4d2d;
+  margin-bottom: 18px;
+  margin-left: 10%;
+}
+
+.left-panel p {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+  max-width: 450px;
+  margin-left: 10%;
+}
+
+.illustration {
+  width: 100%;
+  max-width: 450px;
+  margin-top: 40px;
+}
+
+.right-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 400px;
+  padding: 40px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.login-box h2 {
+  font-size: 24px;
+  margin-bottom: 24px;
+  color: #333;
+}
+
+.links {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.links a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+/* Divisor "OU" */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #ccc;
+  margin: 24px 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #eee;
+}
+
+.divider span {
+  padding: 0 16px;
+}
+
+.social-login {
+  display: flex;
+  gap: 16px; /* Espaço entre os botões */
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 14px;
+  color: #777;
+}
+
+.register-link a {
+  color: #ee4d2d;
+  text-decoration: none;
+  font-weight: bold;
+}
