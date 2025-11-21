@@ -13,13 +13,12 @@
   opacity: 0.9;
 }
 
-/* Variação Primária (Laranja) */
+
 .custom-button.primary {
   background-color: #ee4d2d;
   color: white;
 }
 
-/* Variação Social (Google/Facebook) */
 .custom-button.social {
   background-color: #fff;
   color: #333;
@@ -27,7 +26,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px; /* Espaço entre o ícone e o texto */
+  gap: 8px;
 
 }
 
