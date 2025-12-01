@@ -6,7 +6,9 @@ export function Sidebar() {
   return (
     <aside className="sidebar-container">
       <div className="sidebar-logo">
-        <h2>Shopee <span>Vendedor</span></h2>
+        <Link to="/dashboard" className='logo-link'>
+            <h2> Shopee <span> Vendedor</span> </h2> 
+        </Link>
       </div>
 
       <nav className="sidebar-nav">
@@ -21,7 +23,7 @@ export function Sidebar() {
 
           <li className="nav-title">Produtos</li>
           <li><Link to="/dashboard">Meus Produtos</Link></li>
-          <li><Link to="/dashboard">Adicionar Novo Produto</Link></li>
+          <li><Link to="/produto/novo">Adicionar Novo Produto</Link></li>
 
           <li className="nav-title">Finanças</li>
           <li><Link to="/dashboard">Minha Renda</Link></li>

@@ -14,9 +14,15 @@
   border-bottom: 1px solid #f1f1f1;
 }
 
+.logo-link {
+  text-decoration: none; /* Remove o sublinhado */
+  display: block;        /* Garante que o link ocupe o espaço */
+}
+
 .sidebar-logo h2 {
-  color: #ee4d2d; /* Laranja Shopee */
+  color: #ee4d2d;
   font-size: 20px;
+  margin: 0; /* Remove margens padrão para alinhar melhor */
 }
 
 .sidebar-logo h2 span {

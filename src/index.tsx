@@ -17,7 +17,7 @@ export function Register() {
     // Aqui será a chamada final para a API
     // e então redicionará para o Dashboard
     alert('Cadastro finalizado com sucesso!');
-    navigate('/dashboard'); // (Esta rota será criada no App.tsx depois)
+    navigate('/dashboard'); // 
   }
 
   const renderStep = () => {
