@@ -1,0 +1,77 @@
+.sidebar-container {
+  width: 250px;
+  background-color: #fff;
+  height: 100vh; /* Altura total da tela */
+  border-right: 1px solid #e5e5e5;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+}
+
+.sidebar-logo {
+  padding: 20px;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.sidebar-logo h2 {
+  color: #ee4d2d; /* Laranja Shopee */
+  font-size: 20px;
+}
+
+.sidebar-logo h2 span {
+  color: #333;
+  font-weight: normal;
+  font-size: 16px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 20px 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+.nav-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  padding: 15px 20px 5px 20px;
+  text-transform: uppercase;
+}
+
+.sidebar-nav li a {
+  display: block;
+  padding: 10px 20px 10px 30px;
+  text-decoration: none;
+  color: #555;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.sidebar-nav li a:hover {
+  color: #ee4d2d;
+  background-color: #fdfdfd;
+}
+
+.sidebar-nav li a.active {
+  color: #ee4d2d;
+  font-weight: bold;
+  background-color: #fff5f2; /* Fundo laranja bem clarinho */
+  border-right: 3px solid #ee4d2d;
+}
+
+.sidebar-footer {
+  padding: 20px;
+  border-top: 1px solid #f1f1f1;
+}
+
+.sidebar-footer a {
+  color: #777;
+  text-decoration: none;
+  font-size: 14px;
+}

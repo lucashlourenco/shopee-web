@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, useNavigate } from 'react-router-dom';
 import { App } from './App.tsx';
-import './styles/global.css';
 import { Step1 } from './pages/Register/components/Step1/index.tsx';
+import './styles/global.css';
 
 export function Register() {
   const [step, setStep] = useState(1);

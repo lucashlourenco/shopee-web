@@ -1,7 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import { Login } from './pages/Login/index.tsx';
 import { Register } from './pages/Register/index.tsx';
-
+import { Dashboard } from './pages/Dashboard/index.tsx';
+import { AddProduct } from './pages/AddProduct/index.tsx';
 
 export function App() {
   return (
@@ -9,6 +10,11 @@ export function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<Login />} />
       <Route path="/cadastro" element={<Register />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/produto/novo" element={<AddProduct />} />
+
+
+      <Route path="/" element={<Login />} />
 
       {/* Rota para qualquer outra página não encontrada */}
       <Route path="*" element={<h1>Página não encontrada (404)</h1>} />
