@@ -3,6 +3,7 @@ import { Login } from './pages/Login/index.tsx';
 import { Register } from './pages/Register/index.tsx';
 import { Dashboard } from './pages/Dashboard/index.tsx';
 import { AddProduct } from './pages/AddProduct/index.tsx';
+import { ForgotPassword } from './pages/ForgotPassword/index.tsx';
 
 export function App() {
   return (
@@ -12,6 +13,7 @@ export function App() {
       <Route path="/cadastro" element={<Register />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/produto/novo" element={<AddProduct />} />
+      <Route path="/esqueci-senha" element={<ForgotPassword />} />
 
 
       <Route path="/" element={<Login />} />
