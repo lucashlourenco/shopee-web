@@ -1,0 +1,199 @@
+.orders-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.orders-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.page-header h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 24px;
+}
+
+/* --- ABAS --- */
+.orders-tabs {
+  background: white;
+  display: flex;
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 20px;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-button {
+  padding: 16px 24px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #555;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.tab-button:hover {
+  color: #ee4d2d;
+}
+
+.tab-button.active {
+  color: #ee4d2d;
+  font-weight: 500;
+  border-bottom: 2px solid #ee4d2d;
+}
+
+/* --- FILTRO/BUSCA --- */
+.orders-filter {
+  background: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  max-width: 600px;
+}
+
+/* --- LISTA E CARDS --- */
+.no-orders {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+  background: white;
+  border-radius: 4px;
+}
+
+.order-card {
+  background: white;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 12px 20px;
+  border-bottom: 1px solid #f1f1f1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fffbfb; /* Fundo levemente diferente para cabeçalho */
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar-small {
+  width: 24px;
+  height: 24px;
+  background-color: #ddd;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #555;
+}
+
+.username {
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+}
+
+.order-id {
+  font-size: 12px;
+  color: #888;
+}
+
+/* ITEM DO PEDIDO */
+.order-item {
+  display: flex;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f8f8f8;
+  align-items: center;
+}
+
+.item-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: 1px solid #eee;
+  border-radius: 2px;
+  margin-right: 16px;
+}
+
+.item-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.item-name {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.item-variation {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.item-qty {
+  font-size: 14px;
+  color: #333;
+}
+
+.item-price {
+  font-size: 16px;
+  color: #333;
+}
+
+/* FOOTER */
+.card-footer {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fffbfb;
+}
+
+.order-total {
+  font-size: 14px;
+  color: #555;
+}
+
+.order-total span {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ee4d2d;
+  margin-left: 8px;
+}
+
+.order-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.status-label {
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.status-label.a-enviar { color: #ee4d2d; }
+.status-label.enviando { color: #2673dd; }
+.status-label.concluído { color: #28a745; }
+.status-label.cancelado { color: #999; }

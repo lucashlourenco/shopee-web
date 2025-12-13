@@ -4,6 +4,7 @@ import { Register } from './pages/Register/index.tsx';
 import { Dashboard } from './pages/Dashboard/index.tsx';
 import { AddProduct } from './pages/AddProduct/index.tsx';
 import { ForgotPassword } from './pages/ForgotPassword/index.tsx';
+import { Orders } from './pages/Orders/index.tsx';
 
 export function App() {
   return (
@@ -14,7 +15,7 @@ export function App() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/produto/novo" element={<AddProduct />} />
       <Route path="/esqueci-senha" element={<ForgotPassword />} />
-
+      <Route path="/pedidos" element={<Orders />} />
 
       <Route path="/" element={<Login />} />
 
