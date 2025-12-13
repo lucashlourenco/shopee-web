@@ -1,0 +1,194 @@
+.mass-shipping-container {
+  max-width: 100%;
+  padding-right: 20px;
+}
+
+.page-title {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+/* Abas Principais */
+.main-tabs {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.main-tab-btn {
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: 16px;
+  cursor: pointer;
+  color: #555;
+  font-weight: 500;
+}
+
+.main-tab-btn.active {
+  color: #ee4d2d;
+  border-bottom-color: #ee4d2d;
+}
+
+/* Card de Conteúdo */
+.content-card {
+  background: white;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+/* Filtros Pills */
+.filter-group-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.filter-label {
+  width: 120px;
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+
+.filter-pills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pill-btn {
+  padding: 5px 15px;
+  border: 1px solid #e5e5e5;
+  background: white;
+  border-radius: 20px;
+  cursor: pointer;
+  color: #555;
+  font-size: 14px;
+}
+
+.pill-btn.active {
+  border-color: #ee4d2d;
+  color: #ee4d2d;
+  background-color: #fffbfb;
+}
+
+/* Inputs de Filtro */
+.filter-inputs-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f6f6f6;
+}
+
+.input-row-full {
+  display: flex;
+  align-items: center;
+}
+
+.input-row-full label {
+  width: 220px; /* Largura fixa para alinhar */
+  font-size: 14px;
+  color: #666;
+}
+
+.shopee-select, .date-picker-placeholder {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #dcdcdc;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+  background: white;
+}
+
+.date-picker-placeholder {
+  color: #999;
+  cursor: pointer;
+}
+
+/* Botões de Ação do Filtro */
+.filter-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.reset-link, .collapse-link {
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.collapse-link {
+  color: #007bff;
+  margin-left: 10px;
+}
+
+/* Lista e Tabela */
+.list-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0 10px 0;
+}
+
+.list-controls h3 {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.sort-dropdown {
+  border: 1px solid #e5e5e5;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #555;
+  background: white;
+  cursor: pointer;
+}
+
+.mass-table {
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.mass-table-header {
+  display: flex;
+  background-color: #f6f6f6;
+  padding: 12px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #666;
+  border-bottom: 1px solid #eee;
+}
+
+.col-check { width: 40px; text-align: center; }
+.col-products { flex: 2; }
+.col-id { flex: 1.5; }
+.col-buyer { flex: 1.5; }
+.col-channel { flex: 1; }
+.col-time { flex: 1.5; }
+.col-status { flex: 1.5; }
+
+.mass-table-empty {
+  padding: 60px 0;
+  text-align: center;
+  color: #999;
+}
+
+.empty-icon-sheet {
+  font-size: 40px;
+  margin-bottom: 10px;
+  opacity: 0.3;
+}

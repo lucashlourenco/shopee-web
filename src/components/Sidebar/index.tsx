@@ -5,7 +5,6 @@ import './styles.css';
 export function Sidebar() {
   const location = useLocation();
 
-  // Função auxiliar para verificar se o link está ativo
   const isActive = (path: string) => {
     return location.pathname === path ? 'active' : '';
   };
@@ -20,6 +19,7 @@ export function Sidebar() {
 
       <nav className="sidebar-nav">
         <ul>
+          {/* --- ENVIOS --- */}
           <li className="nav-title">Envios</li>
           <li>
             <Link to="/dashboard" className={isActive('/dashboard')}>
@@ -32,6 +32,7 @@ export function Sidebar() {
             </Link>
           </li>
 
+          {/* --- PEDIDOS --- */}
           <li className="nav-title">Pedidos</li>
           <li>
             <Link to="/pedidos" className={isActive('/pedidos')}>
@@ -44,6 +45,7 @@ export function Sidebar() {
             </Link>
           </li>
 
+          {/* --- PRODUTOS --- */}
           <li className="nav-title">Produtos</li>
           <li>
             <Link to="/produtos" className={isActive('/produtos')}>
@@ -56,18 +58,26 @@ export function Sidebar() {
             </Link>
           </li>
 
+          {/* --- FINANÇAS --- */}
           <li className="nav-title">Finanças</li>
           <li>
             <Link to="/financas" className={isActive('/financas')}>
               Minha Renda
             </Link>
+          </li>
 
+          {/* --- LOJA --- */}
           <li className="nav-title">Loja</li>
           <li>
             <Link to="/perfil" className={isActive('/perfil')}>
-              Perfil e Configurações da Loja
+              Perfil da Loja
             </Link>
           </li>
+          {/* NOVO LINK ADICIONADO AQUI: */}
+          <li>
+            <Link to="/configuracoes" className={isActive('/configuracoes')}>
+              Configurações da Conta
+            </Link>
           </li>
         </ul>
       </nav>
