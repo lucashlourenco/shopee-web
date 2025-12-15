@@ -7,7 +7,6 @@ import './styles.css';
 export function MassShipping() {
   const [activeTab, setActiveTab] = useState<'ship' | 'documents'>('ship');
   const [shippingDeadline, setShippingDeadline] = useState('Tudo');
-  const [shippingChannel, setShippingChannel] = useState('Correios');
 
   return (
     <div className="page-layout">
@@ -26,12 +25,6 @@ export function MassShipping() {
               onClick={() => setActiveTab('ship')}
             >
               Pedidos a Enviar
-            </button>
-            <button 
-              className={`main-tab-btn ${activeTab === 'documents' ? 'active' : ''}`}
-              onClick={() => setActiveTab('documents')}
-            >
-              Gerar Documentos
             </button>
           </div>
 
@@ -53,21 +46,6 @@ export function MassShipping() {
               </div>
             </div>
 
-            <div className="filter-group-row">
-              <label className="filter-label">Canal de Envio</label>
-              <div className="filter-pills">
-                {['Correios (0)', 'Outros Canais de Envio (0)'].map(item => (
-                  <button 
-                    key={item}
-                    className={`pill-btn ${shippingChannel === item ? 'active' : ''}`}
-                    onClick={() => setShippingChannel(item)}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-            </div>
-
             {/* Grid de Inputs de Filtro */}
             <div className="filter-inputs-grid">
               
@@ -76,13 +54,6 @@ export function MassShipping() {
                 <select className="shopee-select">
                   <option>Todos</option>
                 </select>
-              </div>
-
-              <div className="input-row-full">
-                <label>Hora de Confirmação do Pedido</label>
-                <div className="date-picker-placeholder">
-                  Selecione o Tempo 📅
-                </div>
               </div>
 
               <div className="input-row-full">

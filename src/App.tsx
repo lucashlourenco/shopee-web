@@ -9,6 +9,7 @@ import { ShopProfile } from './pages/ShopProfile/index.tsx';
 import { AccountSettings } from './pages/AccountSettings/index.tsx';
 import { MassShipping } from './pages/MassShipping/index.tsx';
 import { Orders } from './pages/Orders/index.tsx';
+import { Income } from './pages/Income/index.tsx';
 
 export function App() {
   return (
@@ -37,8 +38,9 @@ export function App() {
       {/* Loja e Configurações */}
       <Route path="/perfil" element={<ShopProfile />} />
       <Route path="/configuracoes" element={<AccountSettings />} />
-=======
+
       <Route path="/pedidos" element={<Orders />} />
+      <Route path="/financas" element={<Income />} />
 
       {/* Rota de Erro (404) */}
       <Route path="*" element={<h1>Página não encontrada (404)</h1>} />
