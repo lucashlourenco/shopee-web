@@ -1,0 +1,119 @@
+.profile-container-vertical {
+  max-width: 900px;
+  padding: 20px;
+}
+
+/* Aba simulada no topo */
+.tab-header {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.tab-active {
+  display: inline-block;
+  padding: 10px 0;
+  border-bottom: 2px solid #333;
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+}
+
+/* Formulário e Espaçamento */
+.profile-form-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section-title {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.mt-4 {
+  margin-top: 30px;
+}
+
+/* Grupos de Input */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 14px;
+  color: #555;
+}
+
+.input-field {
+  padding: 10px;
+  border: 1px solid #dcdcdc;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #999;
+}
+
+.textarea-field {
+  padding: 10px;
+  border: 1px solid #dcdcdc;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
+  resize: vertical;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+/* Área Específica do Logo */
+.logo-group .main-label {
+  font-size: 14px;
+  color: #333;
+}
+
+.logo-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.sub-label {
+  font-size: 14px;
+  color: #555;
+}
+
+.file-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.edit-text {
+  font-size: 14px;
+  color: #333;
+}
+
+.logo-info-list {
+  margin-top: 5px;
+  padding-left: 20px;
+}
+
+.logo-info-list li {
+  font-size: 12px;
+  color: #666;
+  list-style-type: disc;
+  line-height: 1.5;
+}
+
+/* Botão Salvar */
+.form-actions {
+  margin-top: 20px;
+}
