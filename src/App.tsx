@@ -1,21 +1,14 @@
 import { Routes, Route } from 'react-router-dom';
-
 import { Login } from './pages/Login/index.tsx';
 import { Register } from './pages/Register/index.tsx';
 import { ForgotPassword } from './pages/ForgotPassword/index.tsx';
-
 import { Dashboard } from './pages/Dashboard/index.tsx';
 import { AddProduct } from './pages/AddProduct/index.tsx';
-<<<<<<< HEAD
 import { ProductList } from './pages/ProductList/index.tsx';
 import { ShopProfile } from './pages/ShopProfile/index.tsx';
-import { OrdersList } from './pages/OrdersList/index.tsx';
 import { AccountSettings } from './pages/AccountSettings/index.tsx';
 import { MassShipping } from './pages/MassShipping/index.tsx';
-=======
-import { ForgotPassword } from './pages/ForgotPassword/index.tsx';
 import { Orders } from './pages/Orders/index.tsx';
->>>>>>> main
 
 export function App() {
   return (
@@ -25,7 +18,6 @@ export function App() {
       <Route path="/" element={<Login />} />
       <Route path="/cadastro" element={<Register />} />
       <Route path="/esqueci-senha" element={<ForgotPassword />} />
-<<<<<<< HEAD
       
       {/* --- Rotas do Painel do Vendedor --- */}
       
@@ -37,7 +29,7 @@ export function App() {
       <Route path="/produto/novo" element={<AddProduct />} />
       
       {/* Pedidos */}
-      <Route path="/pedidos" element={<OrdersList />} />
+      <Route path="/pedidos" element={<Orders/>} />
       
       {/* Envios */}
       <Route path="/envios/massa" element={<MassShipping />} />
@@ -47,7 +39,6 @@ export function App() {
       <Route path="/configuracoes" element={<AccountSettings />} />
 =======
       <Route path="/pedidos" element={<Orders />} />
->>>>>>> main
 
       {/* Rota de Erro (404) */}
       <Route path="*" element={<h1>Página não encontrada (404)</h1>} />

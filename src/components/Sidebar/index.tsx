@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './styles.css';
 
@@ -19,19 +18,6 @@ export function Sidebar() {
 
       <nav className="sidebar-nav">
         <ul>
-          {/* --- ENVIOS --- */}
-          <li className="nav-title">Envios</li>
-          <li>
-            <Link to="/dashboard" className={isActive('/dashboard')}>
-              Meus Envios
-            </Link>
-          </li>
-          <li>
-            <Link to="/envios/massa" className={isActive('/envios/massa')}>
-              Envio em Massa
-            </Link>
-          </li>
-
           {/* --- PEDIDOS --- */}
           <li className="nav-title">Pedidos</li>
           <li>
@@ -40,8 +26,8 @@ export function Sidebar() {
             </Link>
           </li>
           <li>
-            <Link to="/pedidos/cancelados" className={isActive('/pedidos/cancelados')}>
-              Cancelamentos
+            <Link to="/envios/massa" className={isActive('/envios/massa')}>
+              Envio em Massa
             </Link>
           </li>
 
