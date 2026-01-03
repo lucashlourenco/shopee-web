@@ -12,4 +12,8 @@ declare module '*.jpg' {
   const content: string;
   export default content;
 }
-// Add other file types as needed, like '*.jpeg', '*.gif', etc.
+
+declare module "*.css" {
+  const content: { [className: string]: string };
+  export default content;
+}
