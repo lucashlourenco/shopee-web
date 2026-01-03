@@ -8,28 +8,40 @@ import { Step3 } from './components/Step3/index.tsx';
 
 export function Register() {
   const [step, setStep] = useState(1);
+  // 1. ESTADO CENTRAL: Criamos um objeto para acumular os dados de todos os passos
+  const [formData, setFormData] = useState({}); 
   const navigate = useNavigate();
 
-  const handleNextStep = () => {
+  // 2. LOGICA DE AVANÇO: Agora recebe os dados (data) da etapa atual e junta ao formData
+  const handleNextStep = (data: any) => {
+    setFormData((prev) => ({ ...prev, ...data }));
     setStep((prevStep) => prevStep + 1);
   };
 
   const handleFinish = () => {
-    
+    // Após o Step 3 concluir a chamada à API, voltamos para o login
     alert('Cadastro finalizado com sucesso! Bem-vindo à sua loja.');
-    navigate('/dashboard'); 
+    navigate('/login'); 
   };
 
   const renderStep = () => {
     switch (step) {
       case 1:
+        // O Step 1 deve chamar onNextStep({ name, email, password })
         return <Step1 onNextStep={handleNextStep} />;
       
       case 2:
+        // O Step 2 deve chamar onNextStep({ cpf, phone, birthdate })
         return <Step2 onNextStep={handleNextStep} />;
       
       case 3:
-        return <Step3 onFinish={handleFinish} />;
+        // Passamos os dados acumulados (formData) para o Step 3 fazer o POST final
+        return (
+          <Step3 
+            userDataFromSteps={formData} 
+            onFinish={handleFinish} 
+          />
+        );
       
       default:
         return <Step1 onNextStep={handleNextStep} />;

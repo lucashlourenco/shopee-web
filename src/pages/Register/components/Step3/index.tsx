@@ -1,62 +1,104 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import { Input } from '../../../../components/Input/index.tsx';
 import { Button } from '../../../../components/Button/index.tsx';
 
-// Define as props que o "pai" (Register) vai passar
+// Define as props, incluindo o userData vindo dos passos anteriores
 interface Step3Props {
-  onFinish: () => void; // Função para finalizar o cadastro
+  userDataFromSteps: any; // Dados do Step 1 e 2 (nome, email, senha, etc)
+  onFinish: () => void;   // Função para redirecionar após o sucesso
 }
 
-export function Step3({ onFinish }: Step3Props) {
-  
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault(); // Impede o recarregamento da página
+export function Step3({ userDataFromSteps, onFinish }: Step3Props) {
+  // Estados para os campos do Step 3
+  const [shopName, setShopName] = useState('');
+  const [cep, setCep] = useState('');
+  const [street, setStreet] = useState('');
+  const [number, setNumber] = useState('');
+  const [complement, setComplement] = useState('');
+  const [neighborhood, setNeighborhood] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [loading, setLoading] = useState(false);
 
-    // --- LÓGICA DA API (ETAPA 3) ---
-    // Aqui será feita a lógica da API:
-    // 1. CRIAR a entidade "Loja" no banco de dados.
-    // 2. Associar essa nova Loja ao usuário que foi criado/atualizado.
-    // 3. Se a API retornar sucesso...
-    
-    console.log('Etapa 3 concluída, finalizando cadastro...');
-    onFinish(); // Chama a função do "pai" para finalizar e redirecionar
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setLoading(true);
+
+    // Estrutura do payload conforme esperado pelo Backend
+    const payload = {
+      userData: {
+        ...userDataFromSteps,
+        role: 'SELLER', // Garante que o usuário será um vendedor
+      },
+      addressData: {
+        cep,
+        street,
+        number,
+        complement,
+        neighborhood,
+        city,
+        state,
+      },
+      shopData: {
+        name: shopName,
+        description: `Loja oficial de ${shopName}`, // Descrição padrão ou vinda de um novo campo
+      },
+    };
+
+    try {
+      // Chamada para a rota de registro que cria User, Address e Shop
+      await axios.post('http://localhost:3333/auth/register', payload);
+      
+      alert('Cadastro de vendedor e loja realizado com sucesso!');
+      onFinish(); // Redireciona para o login ou dashboard
+    } catch (error: any) {
+      console.error('Erro ao finalizar cadastro:', error.response?.data || error.message);
+      alert('Erro ao finalizar o cadastro. Verifique os dados e tente novamente.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* Aqui você pode adicionar uma lógica de "Buscar CEP" no futuro, 
-        que preencheria automaticamente os campos de endereço. 
-        Por enquanto, faremos todos manuais.
-      */}
-
       <Input 
         type="text" 
         placeholder="Nome da Loja" 
+        value={shopName}
+        onChange={(e) => setShopName(e.target.value)}
         required 
       />
       <Input 
         type="text" 
         placeholder="CEP (apenas números)" 
+        value={cep}
+        onChange={(e) => setCep(e.target.value)}
         required 
         maxLength={8}
       />
       <Input 
         type="text" 
         placeholder="Rua / Avenida" 
+        value={street}
+        onChange={(e) => setStreet(e.target.value)}
         required 
       />
       
-      {/* Usando um grupo para Número e Complemento ficarem na mesma linha */}
       <div style={{ display: 'flex', gap: '16px' }}>
         <Input 
           type="text" 
           placeholder="Número" 
+          value={number}
+          onChange={(e) => setNumber(e.target.value)}
           required 
           style={{ flex: 1 }} 
         />
         <Input 
           type="text" 
           placeholder="Complemento" 
+          value={complement}
+          onChange={(e) => setComplement(e.target.value)}
           style={{ flex: 2 }} 
         />
       </div>
@@ -64,22 +106,28 @@ export function Step3({ onFinish }: Step3Props) {
       <Input 
         type="text" 
         placeholder="Bairro" 
+        value={neighborhood}
+        onChange={(e) => setNeighborhood(e.target.value)}
         required 
       />
       <Input 
         type="text" 
         placeholder="Cidade" 
+        value={city}
+        onChange={(e) => setCity(e.target.value)}
         required 
       />
       <Input 
         type="text" 
         placeholder="Estado (Ex: PE)" 
+        value={state}
+        onChange={(e) => setState(e.target.value)}
         required 
         maxLength={2}
       />
       
-      <Button type="submit" variant="primary">
-        Finalizar Cadastro
+      <Button type="submit" variant="primary" disabled={loading}>
+        {loading ? 'Processando...' : 'Finalizar Cadastro'}
       </Button>
     </form>
   );

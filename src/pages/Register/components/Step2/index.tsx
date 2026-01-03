@@ -1,28 +1,26 @@
 import React, { useState } from 'react';
-
-// 1. Importe seus componentes reutilizáveis (o caminho sobe 4 níveis)
 import { Input } from '../../../../components/Input/index.tsx';
 import { Button } from '../../../../components/Button/index.tsx';
 
-// 2. Define as props que o "pai" (Register) vai passar
 interface Step2Props {
-  onNextStep: () => void; // Função para avançar para a próxima etapa
+  onNextStep: (data: any) => void; // Atualizado para receber dados
 }
 
 export function Step2({ onNextStep }: Step2Props) {
-  // 3. Estado para controlar se é Pessoa Física (PF) ou Jurídica (PJ)
   const [tipoPessoa, setTipoPessoa] = useState<'pf' | 'pj'>('pf');
+  const [doc, setDoc] = useState(''); // CPF ou CNPJ
+  const [birthdate, setBirthdate] = useState('');
+  const [phone, setPhone] = useState(''); // Adicionado para bater com o DB
 
   const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault(); // Impede o recarregamento da página
+    event.preventDefault();
 
-    // --- LÓGICA DA API (ETAPA 2) ---
-    // Aqui você faria a chamada à sua API para ATUALIZAR
-    // o usuário com os dados fiscais (CPF/CNPJ, etc.)
-    // Se a API retornar sucesso...
-    
-    console.log('Etapa 2 concluída, avançando...');
-    onNextStep(); // Chama a função do "pai" para mudar o estado para a Etapa 3
+    // Mapeia os dados para os campos que o backend espera
+    onNextStep({ 
+      cpf: doc, 
+      birthdate, 
+      phone 
+    });
   };
 
   return (
@@ -42,45 +40,32 @@ export function Step2({ onNextStep }: Step2Props) {
         </select>
       </div>
 
+      <Input 
+        type="text" 
+        placeholder={tipoPessoa === 'pf' ? "CPF (apenas números)" : "CNPJ (apenas números)"}
+        value={doc}
+        onChange={(e) => setDoc(e.target.value)}
+        required 
+        maxLength={tipoPessoa === 'pf' ? 11 : 14} 
+      />
 
-      {tipoPessoa === 'pf' ? (
+      <Input 
+        type="text" 
+        placeholder="Telefone de contato" 
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+        required 
+      />
+
+      {tipoPessoa === 'pf' && (
         <>
-          {/* --- CAMPOS PARA PESSOA FÍSICA --- */}
-          <Input 
-            type="text" 
-            placeholder="CPF (apenas números)" 
-            required 
-            maxLength={11} 
-          />
-          <Input 
-            type="text" 
-            placeholder="Nacionalidade" 
-            required 
-          />
           <label style={{ fontSize: '14px', color: '#555' }}>Data de Nascimento:</label>
           <Input 
             type="date" 
-            placeholder="Data de Nascimento" 
+            value={birthdate}
+            onChange={(e) => setBirthdate(e.target.value)}
             required 
             style={{ marginTop: '4px' }}
-          />
-        </>
-      ) : (
-        <>
-          <Input 
-            type="text" 
-            placeholder="CNPJ (apenas números)" 
-            required 
-            maxLength={14} 
-          />
-          <Input 
-            type="text" 
-            placeholder="Razão Social" 
-            required 
-          />
-          <Input 
-            type="text" 
-            placeholder="Inscrição Estadual (se houver)" 
           />
         </>
       )}
