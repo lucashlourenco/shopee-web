@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sidebar } from '../../components/Sidebar/index.tsx'; // Importe a sidebar que criamos
+import { Sidebar } from '../../components/Sidebar/index.tsx';
 import { Input } from '../../components/Input/index.tsx';
 import { Button } from '../../components/Button/index.tsx';
 import { CategoryModal } from '../../components/CategoryModal/index.tsx';
@@ -14,22 +14,19 @@ export function AddProduct() {
   const [stock, setStock] = useState('');
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
-  // Imagens
+  // Estados de UI
   const [images, setImages] = useState<string[]>([]);
-
-  // Variações
   const [variationName, setVariationName] = useState('');
   const [variations, setVariations] = useState<string[]>([]);
-
-  // Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // --- Funções Auxiliares ---
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setSelectedFiles([...selectedFiles, file]); // Salva o arquivo real para o upload
+      setSelectedFiles([...selectedFiles, file]); 
       const previewUrl = URL.createObjectURL(file);
       setImages([...images, previewUrl]);
     }
@@ -44,42 +41,60 @@ export function AddProduct() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
+      // 1. Recupera o ID da loja do vendedor logado
+      const storedUser = localStorage.getItem('seller_user');
+      const user = JSON.parse(storedUser || '{}');
+      const shopId = user.shop?.id;
+
+      if (!shopId) {
+        alert('❌ Erro: Loja não encontrada. Faça login novamente.');
+        setLoading(false);
+        return;
+      }
+
+      // 2. Monta o FormData para envio (incluindo imagens e shopId)
       const formData = new FormData();
       formData.append('name', name);
       formData.append('description', description);
       formData.append('category', category);
       formData.append('price', price);
       formData.append('stock', stock);
+      formData.append('shopId', shopId); // 👈 Vincula o produto à sua loja no Backend
       formData.append('variations', JSON.stringify(variations));
 
-      // Envia os arquivos físicos para o Multer no backend
       selectedFiles.forEach((file) => {
         formData.append('files', file);
       });
 
+      // 3. Envia para a API
       const response = await fetch('http://localhost:3333/products', {
         method: 'POST',
         body: formData,
       });
 
       if (response.ok) {
-        alert('✅ Produto cadastrado com sucesso no PostgreSQL e imagem no Cloudinary!');
+        alert('✅ Produto cadastrado com sucesso!');
         // Limpa os campos após o sucesso
         setName('');
         setDescription('');
+        setCategory('');
         setPrice('');
         setStock('');
         setImages([]);
         setSelectedFiles([]);
+        setVariations([]);
       } else {
         const errorData = await response.json();
         alert(`❌ Erro: ${errorData.error}`);
       }
     } catch (error) {
       console.error("Erro ao conectar com a API:", error);
-      alert('❌ O servidor Backend (insinuante-api) está desligado.');
+      alert('❌ Erro de conexão: Verifique se o backend está ligado.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -98,7 +113,6 @@ export function AddProduct() {
           <h2>Adicionar Novo Produto</h2>
 
           <form onSubmit={handleSubmit}>
-            {/* Seção 1: Informações Básicas */}
             <section className="form-section">
               <h3>Informações Básicas</h3>
 
@@ -121,6 +135,7 @@ export function AddProduct() {
                   placeholder="Nome do produto"
                   value={name}
                   onChange={e => setName(e.target.value)}
+                  required
                 />
               </div>
 
@@ -147,7 +162,6 @@ export function AddProduct() {
               </div>
             </section>
 
-            {/* Seção 2: Informações de Venda */}
             <section className="form-section">
               <h3>Informações de Venda</h3>
 
@@ -159,6 +173,7 @@ export function AddProduct() {
                     placeholder="0.00"
                     value={price}
                     onChange={e => setPrice(e.target.value)}
+                    required
                   />
                 </div>
                 <div className="form-group">
@@ -168,6 +183,7 @@ export function AddProduct() {
                     placeholder="0"
                     value={stock}
                     onChange={e => setStock(e.target.value)}
+                    required
                   />
                 </div>
               </div>
@@ -196,7 +212,9 @@ export function AddProduct() {
 
             <div className="form-actions">
               <Button type="button" variant="social" style={{ width: 'auto' }}>Cancelar</Button>
-              <Button type="submit" style={{ width: 'auto', padding: '0 40px' }}>Salvar e Publicar</Button>
+              <Button type="submit" disabled={loading} style={{ width: 'auto', padding: '0 40px' }}>
+                {loading ? 'Publicando...' : 'Salvar e Publicar'}
+              </Button>
             </div>
           </form>
         </div>
