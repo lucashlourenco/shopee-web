@@ -1,37 +1,85 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Sidebar } from '../../components/Sidebar/index.tsx';
 import { Button } from '../../components/Button/index.tsx';
 import { Input } from '../../components/Input/index.tsx';
-import { ORDERS_DATA, Order } from '../../utils/orders.ts';
 import './styles.css';
 
+interface OrderItem {
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+}
+
+interface Order {
+  id: string;
+  status: string;
+  total: number;
+  date: string;
+  customer: { name: string };
+  items: OrderItem[];
+}
+
 export function Orders() {
+  const [orders, setOrders] = useState<Order[]>([]);
   const [activeTab, setActiveTab] = useState('Todos');
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
 
-  // Tabs disponíveis
+  const sellerData = JSON.parse(localStorage.getItem('seller_user') || '{}');
+  const shopId = sellerData.shop?.id;
+
+  // 1. Carregar pedidos da API
+  const fetchOrders = async () => {
+    if (!shopId) return;
+    try {
+      const response = await axios.get(`http://localhost:3333/seller/orders/${shopId}`);
+      setOrders(response.data);
+    } catch (error) {
+      console.error("Erro ao buscar pedidos:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, [shopId]);
+
+  // 2. Ação de Enviar Pedido
+  const handleUpdateStatus = async (orderId: string, newStatus: string) => {
+    try {
+      await axios.patch(`http://localhost:3333/orders/${orderId}/status`, {
+        status: newStatus
+      });
+      // Atualiza a lista localmente após o sucesso
+      fetchOrders();
+    } catch (error) {
+      alert("Erro ao atualizar o pedido.");
+    }
+  };
+
   const tabs = ['Todos', 'A Enviar', 'Enviando', 'Concluído', 'Cancelado'];
 
-  // Lógica de Filtragem
-  const filteredOrders = ORDERS_DATA.filter((order) => {
+  const filteredOrders = orders.filter((order) => {
     const matchesTab = activeTab === 'Todos' || order.status === activeTab;
-    const matchesSearch = 
-      order.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      order.buyerName.toLowerCase().includes(searchTerm.toLowerCase());
-    
+    const matchesSearch =
+      order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      order.customer?.name.toLowerCase().includes(searchTerm.toLowerCase());
+
     return matchesTab && matchesSearch;
   });
 
   return (
     <div className="orders-layout">
       <Sidebar />
-      
+
       <main className="orders-content">
         <header className="page-header">
           <h2>Meus Pedidos</h2>
         </header>
 
-        {/* 1. Abas de Status */}
         <div className="orders-tabs">
           {tabs.map((tab) => (
             <button
@@ -44,77 +92,72 @@ export function Orders() {
           ))}
         </div>
 
-        {/* 2. Barra de Busca */}
         <div className="orders-filter">
           <div className="search-box">
-            <Input 
-              placeholder="Buscar por ID do Pedido ou Nome do Comprador" 
+            <Input
+              placeholder="Buscar por ID ou Nome do Comprador"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              style={{ marginBottom: 0 }} // Remove margem padrão do Input
+              style={{ marginBottom: 0 }}
             />
-            {/* Botão de busca simbólico */}
-            <Button style={{ width: '100px', marginLeft: '10px' }}>Buscar</Button>
           </div>
         </div>
 
-        {/* 3. Lista de Pedidos */}
         <div className="orders-list">
-          {filteredOrders.length === 0 ? (
-            <div className="no-orders">Nenhum pedido encontrado nesta aba.</div>
+          {loading ? (
+            <div className="no-orders">Carregando pedidos...</div>
+          ) : filteredOrders.length === 0 ? (
+            <div className="no-orders">Nenhum pedido encontrado.</div>
           ) : (
             filteredOrders.map((order) => (
               <div key={order.id} className="order-card">
-                {/* Cabeçalho do Card */}
                 <div className="card-header">
                   <div className="user-info">
-                    <div className="avatar-small">{order.buyerName.charAt(0).toUpperCase()}</div>
-                    <span className="username">{order.buyerName}</span>
+                    <div className="avatar-small">
+                      {order.customer?.name.charAt(0).toUpperCase()}
+                    </div>
+                    <span className="username">{order.customer?.name}</span>
                   </div>
-                  <div className="order-id">ID do Pedido: {order.id}</div>
+                  <div className="order-id">ID: {order.id.substring(0, 8)}...</div>
                 </div>
 
-                {/* Itens do Pedido */}
                 {order.items.map((item, index) => (
                   <div key={index} className="order-item">
                     <img src={item.image} alt={item.name} className="item-image" />
                     <div className="item-details">
                       <span className="item-name">{item.name}</span>
-                      <span className="item-variation">Variação: {item.variation}</span>
                       <span className="item-qty">x{item.quantity}</span>
                     </div>
-                    <div className="item-price">
-                      R$ {item.price.toFixed(2)}
-                    </div>
+                    <div className="item-price">R$ {item.price.toFixed(2)}</div>
                   </div>
                 ))}
 
-                {/* Rodapé do Card (Total e Ações) */}
                 <div className="card-footer">
                   <div className="order-total">
-                    Total do Pedido: <span>R$ {order.total.toFixed(2)}</span>
+                    Total: <span>R$ {order.total.toFixed(2)}</span>
                   </div>
-                  
+
                   <div className="order-actions">
-                    {/* Status Label */}
                     <span className={`status-label ${order.status.replace(' ', '-').toLowerCase()}`}>
                       {order.status}
                     </span>
 
-                    {/* Botão de Ação (Varia conforme o status) */}
                     {order.status === 'A Enviar' && (
-                      <Button style={{ width: 'auto', padding: '8px 20px' }}>
+                      <Button
+                        onClick={() => handleUpdateStatus(order.id, 'Enviando')}
+                        style={{ width: 'auto', padding: '8px 20px' }}
+                      >
                         Enviar Pedido
                       </Button>
                     )}
+
                     {order.status === 'Enviando' && (
-                      <Button variant="social" style={{ width: 'auto', padding: '8px 20px' }}>
-                        Ver Rastreio
-                      </Button>
-                    )}
-                    {(order.status === 'Concluído' || order.status === 'Cancelado') && (
-                      <Button variant="social" style={{ width: 'auto', padding: '8px 20px' }}>
-                        Detalhes
+                      <Button
+                        variant="social"
+                        onClick={() => handleUpdateStatus(order.id, 'Concluído')}
+                        style={{ width: 'auto', padding: '8px 20px' }}
+                      >
+                        Marcar como Entregue
                       </Button>
                     )}
                   </div>
