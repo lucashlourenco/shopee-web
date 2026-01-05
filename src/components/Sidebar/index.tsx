@@ -21,6 +21,11 @@ export function Sidebar() {
           {/* --- PEDIDOS --- */}
           <li className="nav-title">Pedidos</li>
           <li>
+            <Link to="/dashboard" className={isActive('/dashboard')}>
+              Dashboard
+            </Link>
+          </li>
+          <li>
             <Link to="/pedidos" className={isActive('/pedidos')}>
               Meus Pedidos
             </Link>
@@ -67,7 +72,7 @@ export function Sidebar() {
           </li>
         </ul>
       </nav>
-      
+
       <div className="sidebar-footer">
         <Link to="/login">Sair</Link>
       </div>
