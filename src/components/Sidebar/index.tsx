@@ -30,11 +30,6 @@ export function Sidebar() {
               Meus Pedidos
             </Link>
           </li>
-          <li>
-            <Link to="/envios/massa" className={isActive('/envios/massa')}>
-              Envio em Massa
-            </Link>
-          </li>
 
           {/* --- PRODUTOS --- */}
           <li className="nav-title">Produtos</li>
@@ -45,7 +40,7 @@ export function Sidebar() {
           </li>
           <li>
             <Link to="/produto/novo" className={isActive('/produto/novo')}>
-              Adicionar Novo Produto
+              + Adicionar Novo Produto
             </Link>
           </li>
 

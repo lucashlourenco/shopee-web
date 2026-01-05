@@ -1,119 +1,173 @@
-.profile-container-vertical {
-  max-width: 900px;
-  padding: 20px;
+/* Layout Principal */
+.shop-profile-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f5f5;
 }
 
-/* Aba simulada no topo */
-.tab-header {
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 20px;
+.shop-profile-content {
+  flex: 1;
+  /* Largura padrão da sua Sidebar para o conteúdo não ficar por baixo dela */
+  margin-left: 250px; 
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
 }
 
-.tab-active {
-  display: inline-block;
-  padding: 10px 0;
-  border-bottom: 2px solid #333;
-  font-weight: 500;
+.page-header {
+  margin-bottom: 30px;
+}
+
+.page-header h2 {
+  font-size: 24px;
   color: #333;
+  margin-bottom: 8px;
+}
+
+.page-header p {
+  color: #666;
   font-size: 14px;
 }
 
-/* Formulário e Espaçamento */
-.profile-form-vertical {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.section-title {
-  font-size: 16px;
-  color: #333;
-  margin-bottom: 10px;
-  font-weight: 500;
-}
-
-.mt-4 {
-  margin-top: 30px;
-}
-
-/* Grupos de Input */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.form-group label {
-  font-size: 14px;
-  color: #555;
-}
-
-.input-field {
-  padding: 10px;
-  border: 1px solid #dcdcdc;
+/* Cartão do Formulário */
+.profile-card {
+  background: #ffffff;
   border-radius: 4px;
-  font-size: 14px;
-  width: 100%;
-  box-sizing: border-box;
+  padding: 40px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
+  gap: 60px;
+  max-width: 1000px;
 }
 
-.input-field:focus {
-  outline: none;
-  border-color: #999;
-}
-
-.textarea-field {
-  padding: 10px;
-  border: 1px solid #dcdcdc;
-  border-radius: 4px;
-  font-size: 14px;
-  width: 100%;
-  resize: vertical;
-  font-family: inherit;
-  box-sizing: border-box;
-}
-
-/* Área Específica do Logo */
-.logo-group .main-label {
-  font-size: 14px;
-  color: #333;
-}
-
-.logo-controls {
+/* Secção da Esquerda: Upload de Imagem */
+.image-upload-section {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  align-items: center;
+  border-right: 1px solid #eee;
+  padding-right: 40px;
+  min-width: 250px;
 }
 
-.sub-label {
-  font-size: 14px;
-  color: #555;
+.avatar-wrapper {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  cursor: pointer;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #eee;
+  transition: all 0.3s ease;
 }
 
-.file-input-row {
+.avatar-wrapper:hover {
+  border-color: #ee4d2d;
+}
+
+.shop-logo-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter 0.3s;
+}
+
+.shop-logo-preview.uploading {
+  filter: blur(2px) grayscale(1);
+}
+
+/* Camada de texto "Alterar Foto" ao passar o rato */
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  color: white;
   display: flex;
   align-items: center;
-  gap: 10px;
-}
-
-.edit-text {
-  font-size: 14px;
-  color: #333;
-}
-
-.logo-info-list {
-  margin-top: 5px;
-  padding-left: 20px;
-}
-
-.logo-info-list li {
+  justify-content: center;
   font-size: 12px;
-  color: #666;
-  list-style-type: disc;
-  line-height: 1.5;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
-/* Botão Salvar */
+.avatar-wrapper:hover .avatar-overlay {
+  opacity: 1;
+}
+
+.upload-hint {
+  font-size: 12px;
+  color: #999;
+  text-align: center;
+  margin-top: 15px;
+  line-height: 1.4;
+}
+
+/* Secção da Direita: Campos de Texto */
+.form-fields-section {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.description-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.description-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.custom-textarea {
+  width: 100%;
+  min-height: 150px;
+  padding: 12px;
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.custom-textarea:focus {
+  outline: none;
+  border-color: #ee4d2d;
+}
+
+/* Botão no fundo */
 .form-actions {
-  margin-top: 20px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Responsividade Básica */
+@media (max-width: 900px) {
+  .profile-card {
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px;
+  }
+  
+  .image-upload-section {
+    border-right: none;
+    padding-right: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 30px;
+  }
+
+  .shop-profile-content {
+    margin-left: 0; /* Para ecrãs pequenos onde a sidebar colapsa */
+    padding: 20px;
+  }
 }

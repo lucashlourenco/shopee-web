@@ -1,129 +1,183 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import axios from 'axios';
 import { Sidebar } from '../../components/Sidebar/index.tsx';
+import { Input } from '../../components/Input/index.tsx';
 import { Button } from '../../components/Button/index.tsx';
 import './styles.css';
 
 export function ShopProfile() {
-  const [formData, setFormData] = useState({
-    shopName: 'PP1 Eletro',
-    description: '',
-    phone: '',
-    secondPhone: ''
-  });
+  // Estados para os dados da loja
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [image, setImage] = useState('');
 
-  // Função para formatar telefone (XX) XXXXX-XXXX
-  const formatPhone = (value: string) => {
-    const onlyNumbers = value.replace(/\D/g, "");
-    return onlyNumbers
-      .replace(/(\d{2})(\d)/, "($1) $2")
-      .replace(/(\d{5})(\d)/, "$1-$2")
-      .replace(/(-\d{4})\d+?$/, "$1");
-  };
+  // Estados de controlo de interface
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-  const handleChange = (field: string, value: string) => {
-    let newValue = value;
-    if (field === 'phone' || field === 'secondPhone') {
-      newValue = formatPhone(value);
+  // Referência para o input de ficheiro (que fica escondido)
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Recupera os dados do vendedor e o ID da loja
+  const sellerData = JSON.parse(localStorage.getItem('seller_user') || '{}');
+  const shopId = sellerData.shop?.id;
+
+  // 1. Carregar dados iniciais da loja
+  useEffect(() => {
+    async function loadShopData() {
+      if (!shopId) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const response = await axios.get(`http://localhost:3333/shops/${shopId}`);
+        setName(response.data.name || '');
+        setDescription(response.data.description || '');
+        setImage(response.data.image || '');
+      } catch (error) {
+        console.error("Erro ao carregar loja:", error);
+      } finally {
+        setLoading(false);
+      }
     }
-    setFormData(prev => ({ ...prev, [field]: newValue }));
+    loadShopData();
+  }, [shopId]);
+
+  // 2. Função para processar o Upload da Imagem
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Criar o FormData para enviar o ficheiro
+    const formData = new FormData();
+    formData.append('image', file);
+
+    setUploading(true);
+    try {
+      const response = await axios.post('http://localhost:3333/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      // Atualiza o estado da imagem com a URL retornada pelo Cloudinary
+      setImage(response.data.url);
+    } catch (error) {
+      console.error("Erro no upload:", error);
+      alert("Erro ao carregar a imagem. Tente novamente.");
+    } finally {
+      setUploading(false);
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // 3. Função para Guardar as alterações do perfil
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Perfil salvo com sucesso!');
+    setSaving(true);
+
+    try {
+      await axios.put(`http://localhost:3333/shops/${shopId}`, {
+        name,
+        description,
+        image
+      });
+
+      alert('Perfil atualizado com sucesso!');
+
+      // Atualiza o localStorage para refletir o novo nome no Dashboard
+      const updatedSeller = {
+        ...sellerData,
+        shop: { ...sellerData.shop, name: name }
+      };
+      localStorage.setItem('seller_user', JSON.stringify(updatedSeller));
+
+    } catch (error) {
+      console.error("Erro ao guardar:", error);
+      alert('Erro ao guardar as alterações.');
+    } finally {
+      setSaving(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="shop-profile-layout">
+        <Sidebar />
+        <main className="shop-profile-content">
+          <p>A carregar dados do perfil...</p>
+        </main>
+      </div>
+    );
+  }
 
   return (
-    <div className="page-layout">
+    <div className="shop-profile-layout">
       <Sidebar />
-      
-      <main className="main-content">
-        <div className="profile-container-vertical">
-          
-          {/* Aba Superior Simulada */}
-          <div className="tab-header">
-            <span className="tab-active">Informação Básica</span>
+
+      <main className="shop-profile-content">
+        <header className="page-header">
+          <h2>Perfil da Loja</h2>
+          <p>Altere as informações públicas da sua Loja.</p>
+        </header>
+
+        <form onSubmit={handleSaveProfile} className="profile-card">
+
+          {/* Seção de Foto */}
+          <div className="image-upload-section">
+            <div
+              className="avatar-wrapper"
+              onClick={() => fileInputRef.current?.click()}
+              title="Clique para alterar a foto"
+            >
+              <img
+                src={image || 'https://placehold.co/400'}
+                alt="Logo da Loja"
+                className={`shop-logo-preview ${uploading ? 'uploading' : ''}`}
+              />
+              <div className="avatar-overlay">
+                <span>{uploading ? 'A carregar...' : 'Alterar Foto'}</span>
+              </div>
+            </div>
+
+            {/* Input de ficheiro escondido */}
+            <input
+              type="file"
+              ref={fileInputRef}
+              style={{ display: 'none' }}
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+
+            <p className="upload-hint">Formatos aceites: JPG, PNG. Máx 2MB.</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="profile-form-vertical">
-            
-            <h3 className="section-title">Informação Básica</h3>
-            
-            {/* Nome da Loja */}
-            <div className="form-group">
-              <label>Nome da Loja</label>
-              <input 
-                type="text"
-                className="input-field"
-                value={formData.shopName}
-                onChange={e => handleChange('shopName', e.target.value)}
+          {/* Seção de Dados */}
+          <div className="form-fields-section">
+            <Input
+              label="Nome da Loja"
+              placeholder="Nome da tua loja"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+
+            <div className="description-group">
+              <label>Descrição da Loja</label>
+              <textarea
+                placeholder="Escreve uma breve descrição sobre a tua loja..."
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="custom-textarea"
               />
             </div>
 
-            {/* Logo da Loja */}
-            <div className="form-group logo-group">
-              <label className="main-label">Shop Logo</label>
-              <div className="logo-controls">
-                <span className="sub-label">Logo</span>
-                <div className="file-input-row">
-                  <span className="edit-text">Editar</span>
-                  <input type="file" accept="image/*" />
-                </div>
-              </div>
-              <ul className="logo-info-list">
-                <li>Dimensões: 300x300px</li>
-                <li>Tamanho máx: 2.0MB</li>
-                <li>Formato: JPG,JPEG,PNG</li>
-              </ul>
-            </div>
-
-            {/* Descrição */}
-            <div className="form-group">
-              <label>Descrição da loja</label>
-              <textarea 
-                className="textarea-field"
-                rows={5}
-                value={formData.description}
-                onChange={e => handleChange('description', e.target.value)}
-              />
-            </div>
-
-            {/* Informações de Contato */}
-            <h3 className="section-title mt-4">Informações de Contato</h3>
-
-            <div className="form-group">
-              <label>Telefone</label>
-              <input 
-                type="text"
-                className="input-field"
-                placeholder="(00) 00000-0000"
-                value={formData.phone}
-                onChange={e => handleChange('phone', e.target.value)}
-                maxLength={15}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Segundo Telefone</label>
-              <input 
-                type="text"
-                className="input-field"
-                placeholder="(00) 00000-0000"
-                value={formData.secondPhone}
-                onChange={e => handleChange('secondPhone', e.target.value)}
-                maxLength={15}
-              />
-            </div>
-
-            {/* Botão Salvar */}
             <div className="form-actions">
-              <Button type="submit" style={{ width: '100px', backgroundColor: '#ee4d2d' }}>
-                Salvar
+              <Button type="submit" disabled={saving || uploading}>
+                {saving ? 'Salvando...' : 'Salvar Alterações'}
               </Button>
             </div>
+          </div>
 
-          </form>
-        </div>
+        </form>
       </main>
     </div>
   );
