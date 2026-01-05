@@ -1,2 +1,2 @@
-// Em: src/globals.d.ts
 declare module '*.css';
+declare module '*.png';

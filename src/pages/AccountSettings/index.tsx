@@ -1,129 +1,189 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Sidebar } from '../../components/Sidebar/index.tsx';
 import { Input } from '../../components/Input/index.tsx';
 import { Button } from '../../components/Button/index.tsx';
 import './styles.css';
 
 export function AccountSettings() {
-  // Estado inicial
-  const [profile, setProfile] = useState({
-    nome: 'Lucas Lourenço',
-    email: 'lucas@exemplo.com',
-    cpf: '***.456.789-**'
-  });
+  // Estados para os dados do utilizador
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState(''); // Novo campo de confirmação
+  const [phone, setPhone] = useState('');
+  const [birthdate, setBirthdate] = useState('');
 
-  // 1. (NOVO) Ao carregar a tela, tenta buscar dados salvos no navegador
+  // Estados de controlo
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+
+  // Recupera o ID do utilizador logado
+  const sellerData = JSON.parse(localStorage.getItem('seller_user') || '{}');
+  const userId = sellerData.id;
+
+  // 1. Carregar dados atuais do banco de dados ao abrir a página
   useEffect(() => {
-    const dadosSalvos = localStorage.getItem('shopee_user_profile');
-    if (dadosSalvos) {
-      setProfile(JSON.parse(dadosSalvos));
+    async function loadUserData() {
+      if (!userId) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const response = await axios.get(`http://localhost:3333/users/${userId}`);
+        const user = response.data;
+
+        setName(user.name || '');
+        setEmail(user.email || '');
+        setPassword(user.password || '');
+        setConfirmPassword(user.password || ''); // Inicializa a confirmação igual à senha
+        setPhone(user.phone || '');
+
+        // Formata a data para o padrão yyyy-MM-dd exigido pelo <input type="date">
+        if (user.birthdate) {
+          setBirthdate(new Date(user.birthdate).toISOString().split('T')[0]);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar dados:", error);
+      } finally {
+        setLoading(false);
+      }
     }
-  }, []);
+    loadUserData();
+  }, [userId]);
 
-  const [passwordData, setPasswordData] = useState({
-    current: '',
-    new: '',
-    confirm: ''
-  });
-
-  const handleUpdateProfile = (e: React.FormEvent) => {
+  // 2. Função para Guardar Alterações
+  const handleUpdateAccount = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // 2. (NOVO) Salva no "banco de dados" do navegador (LocalStorage)
-    localStorage.setItem('shopee_user_profile', JSON.stringify(profile));
-    
-    alert('Dados do perfil atualizados e salvos!');
-  };
+    setError('');
 
-  const handleChangePassword = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (passwordData.new !== passwordData.confirm) {
-      alert('A nova senha e a confirmação não coincidem!');
+    // Validação de Senha
+    if (password !== confirmPassword) {
+      setError('As senhas não coincidem!');
       return;
     }
-    // Aqui seria uma chamada para API real
-    alert('Senha alterada com sucesso!');
-    setPasswordData({ current: '', new: '', confirm: '' });
+
+    if (password.length < 8) {
+      setError('A senha deve ter pelo menos 8 caracteres.');
+      return;
+    }
+
+    setSaving(true);
+
+    try {
+      const response = await axios.put(`http://localhost:3333/users/${userId}`, {
+        name,
+        email,
+        password,
+        phone,
+        birthdate
+      });
+
+      alert('Dados da conta atualizados com sucesso!');
+
+      // Atualiza o localStorage para manter o nome e email sincronizados no sistema
+      const updatedUser = { ...response.data };
+      localStorage.setItem('seller_user', JSON.stringify(updatedUser));
+
+    } catch (error: any) {
+      console.error(error);
+      setError(error.response?.data?.error || 'Erro ao atualizar dados.');
+    } finally {
+      setSaving(false);
+    }
   };
 
-  return (
-    <div className="page-layout">
+  if (loading) return (
+    <div className="settings-layout">
       <Sidebar />
-      <main className="main-content">
-        <div className="settings-container">
-          <header className="page-header">
-            <h2>Configurações da Conta</h2>
-            <p>Gerencie seus dados de acesso e segurança pessoal</p>
-          </header>
+      <main className="settings-content"><p>A carregar...</p></main>
+    </div>
+  );
 
-          <div className="settings-grid">
-            {/* Coluna da Esquerda: Dados Pessoais */}
-            <section className="settings-card">
-              <h3>Meu Perfil</h3>
-              <form onSubmit={handleUpdateProfile}>
-                <div className="form-group">
-                  <label>Nome Completo</label>
-                  <Input 
-                    value={profile.nome} 
-                    onChange={e => setProfile({...profile, nome: e.target.value})} 
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Email de Login</label>
-                  <Input 
-                    value={profile.email} 
-                    onChange={e => setProfile({...profile, email: e.target.value})} 
-                  />
-                </div>
-                <div className="form-group">
-                  <label>CPF (Não editável)</label>
-                  <Input 
-                    value={profile.cpf} 
-                    disabled 
-                    style={{ backgroundColor: '#f0f0f0', color: '#888' }} 
-                  />
-                </div>
-                <Button type="submit">Salvar Perfil</Button>
-              </form>
+  return (
+    <div className="settings-layout">
+      <Sidebar />
+
+      <main className="settings-content">
+        <header className="page-header">
+          <h2>Configurações da Conta</h2>
+          <p>Gira as tuas informações pessoais e de segurança.</p>
+        </header>
+
+        <div className="settings-card">
+          {error && (
+            <div style={{ color: '#ee4d2d', backgroundColor: '#fff5f2', padding: '10px', borderRadius: '4px', marginBottom: '20px', fontSize: '14px', textAlign: 'center', border: '1px solid #ee4d2d' }}>
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleUpdateAccount}>
+            <section className="settings-section">
+              <h3>Perfil Público</h3>
+
+              <Input
+                label="Nome Completo"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+
+              <Input
+                label="E-mail de Acesso"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </section>
 
-            {/* Coluna da Direita: Segurança */}
-            <section className="settings-card">
-              <h3>Alterar Senha</h3>
-              <form onSubmit={handleChangePassword}>
-                <div className="form-group">
-                  <label>Senha Atual</label>
-                  <Input 
-                    type="password" 
-                    placeholder="Digite sua senha atual"
-                    value={passwordData.current}
-                    onChange={e => setPasswordData({...passwordData, current: e.target.value})}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Nova Senha</label>
-                  <Input 
-                    type="password" 
-                    placeholder="Mínimo 6 caracteres"
-                    value={passwordData.new}
-                    onChange={e => setPasswordData({...passwordData, new: e.target.value})}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Confirmar Nova Senha</label>
-                  <Input 
-                    type="password" 
-                    placeholder="Repita a nova senha"
-                    value={passwordData.confirm}
-                    onChange={e => setPasswordData({...passwordData, confirm: e.target.value})}
-                  />
-                </div>
-                <Button type="submit" style={{ backgroundColor: '#fff', color: '#333', border: '1px solid #ccc' }}>
-                  Atualizar Senha
-                </Button>
-              </form>
+            <section className="settings-section">
+              <h3>Segurança</h3>
+              <div className="input-row">
+                <Input
+                  label="Nova Senha"
+                  type="password"
+                  placeholder="Deixe como está para não alterar"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <Input
+                  label="Confirmar Senha"
+                  type="password"
+                  placeholder="Repita a Senha"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+              </div>
             </section>
-          </div>
+
+            <section className="settings-section" style={{ borderBottom: 'none' }}>
+              <h3>Informações de Contacto</h3>
+              <div className="input-row">
+                <Input
+                  label="Telemóvel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="(00) 00000-0000"
+                />
+                <Input
+                  label="Data de Nascimento"
+                  type="date"
+                  value={birthdate}
+                  onChange={(e) => setBirthdate(e.target.value)}
+                />
+              </div>
+            </section>
+
+            <div className="settings-actions">
+              <Button type="submit" disabled={saving}>
+                {saving ? 'A guardar...' : 'Guardar Alterações'}
+              </Button>
+            </div>
+          </form>
         </div>
       </main>
     </div>

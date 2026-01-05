@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Input } from '../../components/Input/index.tsx';
 import { Button } from '../../components/Button/index.tsx';
 import shopeeIllustration from '../../assets/images/truck.png';
-import googleIcon from '../../assets/images/google-icon-logo.svg';
+// import googleIcon from '../../assets/images/google-icon-logo.svg'; 
 
 import './styles.css';
 
@@ -93,20 +93,22 @@ export function Login() {
             </Button>
           </form>
 
-          <div className="links">
+          {/*<div className="links">
             <Link to="/esqueci-senha">Esqueci minha senha</Link>
-          </div>
+          </div>*/}
 
           <div className="divider">
             <span>OU</span>
-          </div>
+          </div> 
 
-          <div className="social-login">
+          
+          {/* <div className="social-login">
             <Button variant="social" type="button">
               <img src={googleIcon} alt="Google" />
               Google
             </Button>
-          </div>
+          </div> */}
+          
 
           <footer className="register-link">
             Novo na Shopee? {' '}

@@ -24,12 +24,28 @@ export function AddProduct() {
   // --- Funções Auxiliares ---
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setSelectedFiles([...selectedFiles, file]); 
-      const previewUrl = URL.createObjectURL(file);
-      setImages([...images, previewUrl]);
+    if (e.target.files) {
+      const filesArray = Array.from(e.target.files);
+
+      // Adiciona os arquivos ao estado de envio
+      setSelectedFiles(prev => [...prev, ...filesArray]);
+
+      // Gera os previews para exibição na tela
+      const newPreviews = filesArray.map(file => URL.createObjectURL(file));
+      setImages(prev => [...prev, ...newPreviews]);
     }
+  };
+
+  // FUNÇÃO PARA REMOVER IMAGEM
+  const handleRemoveImage = (index: number) => {
+    // Remove do array de arquivos reais
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+
+    // Remove do array de URLs de preview
+    const newImages = [...images];
+    URL.revokeObjectURL(newImages[index]); // Limpa a memória
+    newImages.splice(index, 1);
+    setImages(newImages);
   };
 
   const handleAddVariation = () => {
@@ -44,7 +60,6 @@ export function AddProduct() {
     setLoading(true);
 
     try {
-      // 1. Recupera o ID da loja do vendedor logado
       const storedUser = localStorage.getItem('seller_user');
       const user = JSON.parse(storedUser || '{}');
       const shopId = user.shop?.id;
@@ -55,21 +70,19 @@ export function AddProduct() {
         return;
       }
 
-      // 2. Monta o FormData para envio (incluindo imagens e shopId)
       const formData = new FormData();
       formData.append('name', name);
       formData.append('description', description);
       formData.append('category', category);
       formData.append('price', price);
       formData.append('stock', stock);
-      formData.append('shopId', shopId); // 👈 Vincula o produto à sua loja no Backend
+      formData.append('shopId', shopId);
       formData.append('variations', JSON.stringify(variations));
 
       selectedFiles.forEach((file) => {
         formData.append('files', file);
       });
 
-      // 3. Envia para a API
       const response = await fetch('http://localhost:3333/products', {
         method: 'POST',
         body: formData,
@@ -77,7 +90,6 @@ export function AddProduct() {
 
       if (response.ok) {
         alert('✅ Produto cadastrado com sucesso!');
-        // Limpa os campos após o sucesso
         setName('');
         setDescription('');
         setCategory('');
@@ -117,15 +129,33 @@ export function AddProduct() {
               <h3>Informações Básicas</h3>
 
               <div className="form-group">
-                <label>Imagens do Produto *</label>
+                <label>Imagens do Produto * (Máx. 9)</label>
                 <div className="image-upload-area">
                   {images.map((img, index) => (
-                    <img key={index} src={img} alt="Preview" className="img-preview" />
+                    <div key={index} className="preview-container">
+                      <img src={img} alt="Preview" className="img-preview" />
+                      <button
+                        type="button"
+                        className="remove-image-badge"
+                        onClick={() => handleRemoveImage(index)}
+                      >
+                        ×
+                      </button>
+                    </div>
                   ))}
-                  <label className="upload-btn">
-                    + Adicionar Imagem
-                    <input type="file" onChange={handleImageUpload} hidden accept="image/*" />
-                  </label>
+
+                  {images.length < 9 && (
+                    <label className="upload-btn">
+                      + Adicionar
+                      <input
+                        type="file"
+                        onChange={handleImageUpload}
+                        hidden
+                        accept="image/*"
+                        multiple // Permite selecionar vários de uma vez
+                      />
+                    </label>
+                  )}
                 </div>
               </div>
 
@@ -192,7 +222,7 @@ export function AddProduct() {
                 <label>Variações (Ex: Cor, Tamanho)</label>
                 <div className="variation-input-group">
                   <Input
-                    placeholder="Ex: Vermelho, Azul, G, M..."
+                    placeholder="Ex: Vermelho, G..."
                     value={variationName}
                     onChange={e => setVariationName(e.target.value)}
                     style={{ marginBottom: 0 }}
